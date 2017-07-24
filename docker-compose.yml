@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  openhim-mongo:
+    container_name: openhim-mongo
+    image: mongo
+    networks:
+      - openhim
+
+  openhim-core:
+    container_name: openhim-core
+    image: jembi/openhim-core
+    environment:
+      mongo_url: mongodb://openhim-mongo/openhim
+      mongo_atnaUrl: "mongodb://openhim-mongo/openhim"
+    ports:
+      - "8080:8080"
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      - openhim-mongo
+    restart: unless-stopped
+    networks:
+      - openhim
+
+  openhim-console:
+    container_name: openhim-console
+    image: jembi/openhim-console
+    ports:
+      - "8888:80"
+    networks:
+      - openhim
+    volumes:
+      - ./openhim-console-config.json:/usr/share/nginx/html/config/default.json
+
+networks:
+  openhim:

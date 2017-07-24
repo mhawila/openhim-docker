@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+  openhim-docker:
+    container_name: openhim-core
+    image: jembi/openhim-core
+    ports:
+      - "8080:8080"
+    environment:
+      - mongo_url=mongodb://mongo/openhim
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo
